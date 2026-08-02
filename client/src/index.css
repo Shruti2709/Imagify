@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@import "tailwindcss";
+
+/* Enables class-based dark mode: add/remove `dark` on a parent element to toggle */
+@custom-variant dark (&:where(.dark, .dark *));
+
+*{
+  font-family: Outfit;
+}
+.placeholder-color{
+  color:#e0e0e0;
+  font-weight: 300;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
