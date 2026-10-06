@@ -67,6 +67,46 @@ export const loginUser = async (req, res) => {
     }
 };
 
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+        if (!email || !newPassword) {
+            return res.json({ success: false, message: "Email and new password are required" });
+        }
+        if (newPassword.length < 6) {
+            return res.json({ success: false, message: "Password must be at least 6 characters long" });
+        }
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: "No account found with this email" });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        sendMail({
+            to: user.email,
+            subject: "Password Reset Successful 🔒",
+            html: `
+                <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
+                    <h2 style="color:#1e293b;">Password Reset Successful</h2>
+                    <p>Hi ${user.name},</p>
+                    <p>Your password for Imagify has been reset successfully. You can now login with your new password.</p>
+                    <p style="color:#64748b; font-size: 13px;">— The Imagify Team</p>
+                </div>
+            `
+        });
+
+        res.json({ success: true, message: "Password reset successfully. Please login." });
+    } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: error.message || "Error resetting password" });
+    }
+};
+
+
 export const userCredits = async (req, res) => {
 
     try {
