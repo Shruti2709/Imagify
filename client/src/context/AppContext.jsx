@@ -19,7 +19,7 @@ const AppContextProvider = (props) => {
   // Dark mode, persisted across sessions
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark')
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://imagify-ct2w.onrender.com'
   const navigate = useNavigate()
 
   useEffect(() => {
